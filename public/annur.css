@@ -224,3 +224,90 @@ body{font-family:var(--font)}
 /* fon: tajuk pun Plus Jakarta Sans (gaya.css guna serif untuk h1-h3) */
 .shell h1,.shell h2,.shell h3,.shell h4,.shell b,.shell .brand-name{font-family:var(--font)}
 @media (max-width:900px){.an-hero h1,.an-hero p{max-width:none}.an-hero p{max-width:300px}}
+
+/* =====================================================================
+   Bahagian 2: halaman awam, log masuk, panel admin, dan kemasan halaman dalam
+   ===================================================================== */
+:root{--font-display:var(--font)}
+h1,h2,h3,h4{font-family:var(--font)}
+
+/* ---------- butang utama bergradien (laman awam, log masuk, dialog) ---------- */
+.btn.primary{background:var(--an-grad);border:0;color:#fff;box-shadow:0 8px 20px rgba(47,107,255,.28)}
+.btn.primary:hover{filter:brightness(1.07);transform:translateY(-1px)}
+
+/* ---------- laman awam ---------- */
+body{background:var(--an-bg)}
+.site-header{background:rgba(255,255,255,.82);border-bottom:1px solid rgba(255,255,255,.9);box-shadow:0 6px 24px rgba(40,70,170,.08)}
+.menu>a.active{color:var(--an-blue)}
+.hero{background:radial-gradient(90% 120% at 100% 0%,#3A5BFF 0%,transparent 55%),linear-gradient(120deg,#0A1744 0%,#16318C 55%,#3A47D8 100%)}
+.hero::after{background:radial-gradient(80% 90% at 80% 40%,rgba(80,200,255,.18),transparent 60%)}
+.streaks{opacity:.35}
+.hero .rule{background:var(--an-grad);width:64px}
+.hero .kicker{color:#9FD8FF !important}
+.hero h1{font-weight:800;letter-spacing:-.025em}
+.hero-lede{color:#D3DDFF}
+.hero-stats b{font-weight:800}
+.preview-card{border-radius:24px;box-shadow:0 24px 60px rgba(6,14,60,.45)}
+.section.tint{background:rgba(255,255,255,.55);border-color:var(--an-line)}
+.section-head h2{font-weight:800}
+.course{border-radius:var(--an-r);border:1px solid rgba(255,255,255,.9);box-shadow:var(--an-shadow);background:#fff}
+.course:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(40,70,170,.18);border-color:#fff}
+.course h3{font-weight:800}
+.steps{border-radius:var(--an-r);border:1px solid rgba(255,255,255,.9);box-shadow:var(--an-shadow)}
+.step-no{color:var(--an-blue)}
+.cta-band{background:linear-gradient(120deg,#0A1744,#1B2F9A 60%,#3A47D8);border-radius:26px}
+.site-footer{background:linear-gradient(180deg,#0A1744,#060E2C)}
+
+/* ---------- log masuk ---------- */
+.auth{background:radial-gradient(90% 120% at 100% 0%,#3A5BFF 0%,transparent 55%),linear-gradient(120deg,#0A1744 0%,#16318C 60%,#2C3DB8 100%)}
+.auth-copy .rule{background:var(--an-grad)}
+.auth-card{border-radius:26px;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22)}
+
+/* ---------- kemasan halaman dalam pelajar ---------- */
+.shell .mycourse{border-radius:18px;transition:background .2s,transform .2s}
+.shell .mycourse:hover{background:#F1F4FF;transform:translateX(4px)}
+.shell .thumb-sm{border-radius:14px;overflow:hidden}
+.shell .bar i,.shell .linebar i{background:var(--an-grad)}
+.shell .bar.ok i{background:linear-gradient(90deg,#14A56B,#43D79B)}
+.shell .page-head h1{font-weight:800}
+.shell .preview-stage,.shell .stage{border-radius:22px;overflow:hidden}
+.shell .lesson-row.aktif,.shell .lesson-row[aria-current]{background:#EAF0FF}
+.shell .pilltabs button[aria-selected="true"],.shell .tabs button[aria-selected="true"]{background:var(--an-grad);border-color:transparent;color:#fff}
+.shell .avatar.lg{background:var(--an-grad)}
+
+/* ---------- panel admin ---------- */
+.p-admin{background:radial-gradient(900px 500px at 85% -10%,rgba(123,92,255,.16),transparent 60%),radial-gradient(700px 500px at 30% 110%,rgba(47,107,255,.12),transparent 60%),var(--an-bg);color:var(--an-ink);font-family:var(--font)}
+.p-admin .kad,.p-admin .panel-card{border-radius:var(--an-r);border:1px solid rgba(255,255,255,.9);box-shadow:var(--an-shadow)}
+.p-admin a.kad:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(40,70,170,.16);border-color:#fff}
+.p-admin .butang,.p-admin button{background:var(--an-grad);border:0;box-shadow:0 6px 16px rgba(47,107,255,.25)}
+.p-admin .butang:hover,.p-admin button:hover{filter:brightness(1.07);background:var(--an-grad)}
+.p-admin .butang.kedua,.p-admin button.kedua{background:#fff;color:var(--an-ink);border:1px solid var(--an-line);box-shadow:none}
+.p-admin .butang.kedua:hover,.p-admin button.kedua:hover{background:#F1F4FF}
+.p-admin h1,.p-admin h2{font-weight:800;letter-spacing:-.015em}
+
+@media (min-width:901px){
+  .p-admin .atas{position:fixed;left:0;top:0;bottom:0;width:248px;padding:0;z-index:50}
+  .p-admin .atas .bekas{height:100%;max-width:none;margin:0;border-radius:0;flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:6px;padding:22px 16px;box-shadow:none;overflow:auto;
+    background:radial-gradient(120% 60% at 0% 0%,var(--an-navy-3) 0%,var(--an-navy-2) 38%,var(--an-navy-1) 100%)}
+  .p-admin .jenama{flex-direction:column;align-items:center;text-align:center;gap:8px;color:#fff;padding:10px 8px 20px;font-size:19px;font-weight:800}
+  .p-admin .jenama small{color:#AFC0F5}
+  .p-admin .jenama .mark{width:46px;height:46px;border-radius:14px;background:var(--an-grad);color:#fff}
+  .p-admin .atas .navpills{flex-direction:column;align-items:stretch;background:none;border:0;padding:0;margin:0;gap:4px;overflow:visible;max-width:none;border-radius:0}
+  .p-admin .atas .navpills a{height:44px;justify-content:flex-start;gap:12px;padding:0 14px;border-radius:14px;background:none;box-shadow:none;color:#C9D5FA;font-size:14px;font-weight:600;border:0;transition:background .2s,color .2s,transform .2s}
+  .p-admin .atas .navpills a:hover{background:rgba(255,255,255,.08);color:#fff;transform:translateX(3px)}
+  .p-admin .atas .navpills a[aria-current="page"]{background:var(--an-grad);color:#fff;box-shadow:0 8px 22px rgba(47,107,255,.45)}
+  .p-admin .atas .navpills .bil-pil{margin-left:auto}
+  .p-admin .atas #pengguna{margin:auto 0 0;display:flex;align-items:center;gap:8px}
+  .p-admin .atas .role-chip{flex:1;min-width:0;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:#fff}
+  .p-admin .atas .role-chip small{color:#AFC0F5}
+  .p-admin .atas #pengguna button{background:rgba(255,255,255,.1);box-shadow:none;border:1px solid rgba(255,255,255,.14);color:#fff;width:42px;padding:0}
+  .p-admin main.bekas{margin:0 0 0 248px;max-width:none;padding:28px 32px 56px}
+}
+@media (max-width:900px){
+  .p-admin .atas .bekas{background:#fff;border-radius:18px}
+  .p-admin .atas .navpills a[aria-current="page"]{background:var(--an-grad);color:#fff}
+}
+
+.p-admin{min-height:100vh}
+.auth::after{background:radial-gradient(80% 90% at 80% 40%,rgba(80,200,255,.16),transparent 60%)}
+.auth .streaks{opacity:.3}

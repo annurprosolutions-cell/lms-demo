@@ -231,7 +231,7 @@ const CARI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 function atasShell() {
   const p = saya.pengguna;
   return `<header class="shell-top">
-    <a class="sh-brand-mobil" href="#/">${TOPI.replace('class="topi"', '')}<span>${h(konfig.laman.nama)}</span></a>
+    <a class="sh-brand-mobil" href="#/">${TOPI.replace('class="topi"', '').replaceAll('anT', 'anTm')}<span>${h(konfig.laman.nama)}</span></a>
     <label class="sh-cari">${CARI}<input type="search" id="cariSiri" placeholder="Cari siri atau kuliah..." autocomplete="off" aria-label="Cari siri atau kuliah"></label>
     <button type="button" class="sh-profil" data-pergi="#/akaun" aria-label="Akaun"><span class="avatar">${inisial(p)}</span><div><b>${h(p.nama || p.emel)}</b><small>${h(LABEL_GOL[saya.golongan?.golongan] || 'Pelajar')}</small></div></button>
   </header>`;
