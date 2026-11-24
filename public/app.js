@@ -210,7 +210,70 @@ function topbar(aktif) {
   </div>`;
 }
 
-const halamanApp = (aktif, isi) => `<div class="app${saya ? ' ada-tab' : ''}"><div class="app-wrap">${topbar(aktif)}<div class="page">${isi}</div>${footerPenafian()}</div>${saya ? barBawah(aktif) : ''}</div>`;
+const TOPI = '<svg class="topi" viewBox="0 0 64 64" fill="none" aria-hidden="true"><defs><linearGradient id="anT" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FE9FF"/><stop offset="1" stop-color="#5B7CFF"/></linearGradient></defs><path d="M32 8 3 22l29 14 29-14z" fill="url(#anT)"/><path d="M14 30v14c0 5 8 10 18 10s18-5 18-10V30L32 40z" fill="url(#anT)" opacity=".85"/><path d="M58 24v18" stroke="#BFEFFF" stroke-width="3" stroke-linecap="round"/></svg>';
+const IKN = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const SB_NAV = [
+  ['utama', 'Dashboard', '#/', IKN('<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>')],
+  ['kuliah', 'Kuliah Saya', '#/kuliah', IKN('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/>')],
+  ['artikel', 'Artikel', '/artikel', IKN('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>')],
+  ['akaun', 'Akaun', '#/akaun', IKN('<circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c.9-3.4 3.8-5.2 7.5-5.2s6.6 1.8 7.5 5.2"/>')],
+];
+function sidebar(aktif) {
+  const khas = ['admin', 'guru'].includes(saya.pengguna.peranan);
+  const item = [...SB_NAV, ...(khas ? [['panel', 'Panel ' + saya.pengguna.peranan, '/panel/', IKON_BAR.panel]] : [])];
+  return `<aside class="sidebar" aria-label="Menu utama">
+    <a class="sb-brand" href="#/"><span class="sb-logo">${TOPI.replace('class="topi"', '')}</span><b>${h(konfig.laman.nama)}</b><small>${h(konfig.laman.tagline || 'Belajar. Berkembang. Cemerlang.')}</small></a>
+    <nav class="sb-nav">${item.map(([n, l, ke, ik]) => `<a class="sb-link${aktif === n ? ' aktif' : ''}" href="${ke}"${aktif === n ? ' aria-current="page"' : ''}>${ik}<span>${l}</span></a>`).join('')}</nav>
+    <div class="sb-kad"><b>Belajar di telefon</b><small>Pasang app untuk akses pantas</small><button type="button" class="btn" data-act="pasang" data-pasang hidden>Pasang app</button></div>
+  </aside>`;
+}
+const CARI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
+function atasShell() {
+  const p = saya.pengguna;
+  return `<header class="shell-top">
+    <a class="sh-brand-mobil" href="#/">${TOPI.replace('class="topi"', '')}<span>${h(konfig.laman.nama)}</span></a>
+    <label class="sh-cari">${CARI}<input type="search" id="cariSiri" placeholder="Cari siri atau kuliah..." autocomplete="off" aria-label="Cari siri atau kuliah"></label>
+    <button type="button" class="sh-profil" data-pergi="#/akaun" aria-label="Akaun"><span class="avatar">${inisial(p)}</span><div><b>${h(p.nama || p.emel)}</b><small>${h(LABEL_GOL[saya.golongan?.golongan] || 'Pelajar')}</small></div></button>
+  </header>`;
+}
+const halamanApp = (aktif, isi) => (saya
+  ? `<div class="shell app ada-tab">${sidebar(aktif)}<div class="shell-main">${atasShell()}<div class="page">${isi}</div>${footerPenafian()}</div>${barBawah(aktif)}</div>`
+  : `<div class="app"><div class="app-wrap">${topbar(aktif)}<div class="page">${isi}</div>${footerPenafian()}</div></div>`);
+
+// Cari: tapis kad siri pada halaman semasa; Enter dari halaman lain membawa carian ke Kuliah Saya.
+const TEKS_CARI = '.kc,.mycourse,.course,.next-item,.lesson-row';
+function tapisCari(q) {
+  const k = q.trim().toLowerCase();
+  document.querySelectorAll(TEKS_CARI).forEach((el) => { el.style.display = !k || el.textContent.toLowerCase().includes(k) ? '' : 'none'; });
+}
+document.addEventListener('input', (e) => { if (e.target.id === 'cariSiri') tapisCari(e.target.value); });
+document.addEventListener('keydown', (e) => {
+  if (e.target.id !== 'cariSiri' || e.key !== 'Enter') return;
+  const q = e.target.value;
+  if (location.hash !== '#/kuliah') { try { sessionStorage.setItem('kh-cari', q); } catch { /* storan disekat */ } location.hash = '#/kuliah'; }
+});
+function pulihCari() {
+  let q = '';
+  try { q = sessionStorage.getItem('kh-cari') || ''; sessionStorage.removeItem('kh-cari'); } catch { /* storan disekat */ }
+  const i = document.getElementById('cariSiri');
+  if (q && i) { i.value = q; tapisCari(q); }
+}
+
+// Gerakan dashboard: nombor mengira naik, cincin dan bar kemajuan mengisi. Hormati prefers-reduced-motion.
+function animasiDash() {
+  const kurang = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-kira]').forEach((el) => {
+    const sasar = Number(el.dataset.kira), akhiran = el.dataset.akhiran || '';
+    if (kurang) { el.textContent = sasar + akhiran; return; }
+    const mula = performance.now();
+    const langkah = (t) => { const x = Math.min(1, (t - mula) / 1100); el.textContent = Math.round(sasar * (1 - Math.pow(1 - x, 3))) + akhiran; if (x < 1) requestAnimationFrame(langkah); };
+    requestAnimationFrame(langkah);
+  });
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('.ring-svg .fg').forEach((c) => { c.style.strokeDashoffset = c.dataset.ofset; });
+    document.querySelectorAll('.kc-bar i').forEach((b) => { b.style.width = b.dataset.lebar + '%'; });
+  }));
+}
 
 // Kad ajakan log masuk: sistem ini percuma, pelawat hanya perlu mendaftar dengan akaun Google.
 function kadLogMasuk() {
@@ -570,47 +633,89 @@ async function dashboard() {
   if (gol.tamatTempoh) tindakan.push(`<div class="row-item crit"><div class="rt"><b>Akses ${h(LABEL_GOL[gol.asal] || '')} sudah tamat</b><small><em class="crit">Masukkan kod baharu</em> · kini sebagai orang awam</small></div><a class="btn sm outline" href="#/akaun">Kod</a></div>`);
   else if (gol.tamat && bezaHari(gol.tamat, hariIniMy()) <= 7) tindakan.push(`<div class="row-item warn"><div class="rt"><b>Akses ${h(LABEL_GOL[gol.golongan])} tamat dalam ${Math.max(0, bezaHari(gol.tamat, hariIniMy()))} hari</b><small><em class="warn">Perhatian</em> · tarikh tamat ${h(tarikhMy(gol.tamat + 'T00:00:00+08:00'))}</small></div><a class="btn sm outline" href="#/akaun">Kod</a></div>`);
   if (kunci && kodAktif()) tindakan.push(`<div class="row-item info"><div class="rt"><b>${kunci} kuliah perlu kod kelas</b><small><em class="info">Kod</em> · masukkan kod daripada guru anda</small></div><button class="btn sm outline" data-pergi="#/akaun">Kod</button></div>`);
-  if (!tindakan.length) tindakan.push('<div class="row-item done"><div class="rt"><b>Tiada tindakan diperlukan</b><small><em class="done">Semua baik</em></small></div></div>');
 
-  const ring = 326.7;
-  akar.innerHTML = halamanApp('utama', `<div class="dash-grid halaman">
-    <div class="panel-card">
-      <div class="panel-title"><h3>Ringkasan saya</h3><button class="btn sm ghost" data-pergi="#/kuliah">Lihat semua</button></div>
-      <div class="ring-wrap">
-        <svg width="140" height="140" viewBox="0 0 140 140" aria-hidden="true"><circle cx="70" cy="70" r="52" fill="none" stroke="#E7EFEB" stroke-width="12"/><circle cx="70" cy="70" r="52" fill="none" stroke="${peratus === 100 ? 'var(--ok)' : 'var(--accent)'}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - peratus / 100)}" transform="rotate(-90 70 70)" style="transition:stroke-dashoffset .8s ease"/></svg>
-        <span class="ring-label"><b class="tnum">${dua(boleh.length)}</b></span>
-        <span class="ring-tag" style="background:${boleh.length ? 'var(--accent)' : 'var(--ok)'}">${boleh.length ? 'Kuliah belum khatam' : 'Semua khatam'}</span>
-      </div>
-      <p class="greet">${salam}, ${h(saya.pengguna.nama || saya.pengguna.emel)}</p>
-      <p class="hijri" style="text-align:center;margin-top:4px">${h(hari)}${hijri ? `, <b>${h(hijri)}</b>` : ''} · ${dua(tarikh.getDate())}/${dua(tarikh.getMonth() + 1)}/${tarikh.getFullYear()}</p>
-      <div class="big-pct tnum">${peratus}%<span>kemajuan keseluruhan</span></div>
-      <div class="seg-bars">
-        <div><i style="background:var(--ok)"></i><b class="tnum">${dua(khatam)}</b><small>Kuliah khatam</small></div>
-        <div><i style="background:var(--accent)"></i><b class="tnum">${dua(boleh.length)}</b><small>Boleh ditonton</small></div>
-        <div><i style="background:var(--vip)"></i><b class="tnum">${dua(kunci)}</b><small>Perlu kod</small></div>
-      </div>
-      <div class="mini-stats">
-        <div><b class="tnum">${siri.length}</b><small>Siri kuliah</small></div>
-        <div><b class="tnum">${siri.filter((c) => c.subject.length && c.subject.every((s) => s.selesai)).length}</b><small>Siri khatam</small></div>
-        <div><b>${h(LABEL_GOL[gol.golongan] || 'Pelajar')}</b><small>Akaun</small></div>
+  const siriKhatam = siri.filter((c) => c.subject.length && c.subject.every((s) => s.selesai)).length;
+  const nama = saya.pengguna.nama || saya.pengguna.emel;
+  const IKS = {
+    buku: IKN('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/>'),
+    lencana: IKN('<circle cx="12" cy="9" r="5.5"/><path d="m8.6 13.6-1.6 7 5-2.6 5 2.6-1.6-7"/>'),
+    piala: IKN('<path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5v1.2A3.3 3.3 0 0 0 8 10.5M16 6h3.5v1.2A3.3 3.3 0 0 1 16 10.5M12 13v4M8.5 20h7M10 17h4"/>'),
+    main: IKN('<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10.5 9.5 4 2.5-4 2.5z"/>'),
+  };
+  // Kursus dipaparkan: siri yang sedang dipelajari dahulu, kemudian yang belum mula, siri khatam terakhir.
+  const kemaju = (c) => pct(c.subject.filter((x) => x.selesai).length, c.subject.length);
+  const susunan = [...siri].sort((x, y) => (kemaju(x) === 100) - (kemaju(y) === 100) || kemaju(y) - kemaju(x)).slice(0, 3);
+  const kadKursus = (c, i) => {
+    const n = c.subject.length, d = c.subject.filter((x) => x.selesai).length, p = kemaju(c);
+    const siap = p === 100 && n > 0;
+    return `<a class="kc${siap ? ' siap' : ''}" href="#/course/${encodeURIComponent(c.slug)}">
+      <div class="kc-gbr"><span class="kc-tag ${siap ? 'siap' : d ? '' : 'baru'}">${siap ? 'Khatam' : d ? 'Sedang belajar' : 'Baru'}</span><div class="${ART(i)}"></div>${imgGambar(c.gambar)}</div>
+      <div class="kc-isi"><b>${h(c.tajuk)}</b><div class="kc-bar"><span><i data-lebar="${p}"></i></span>${p}%</div>
+        <small class="muted">${d ? `${d} daripada ${n} kuliah` : `Belum mula · ${n} kuliah`}</small>
+        <div class="kc-btn">${siap ? 'Lihat semula' : d ? 'Sambung belajar' : 'Mula belajar'}</div></div></a>`;
+  };
+  const langkahLaluan = [
+    ['Pilih siri', true],
+    ['Tonton kuliah', khatam > 0],
+    ['Khatam siri', siriKhatam > 0],
+    [sijilAktif() ? 'Dapat sijil' : 'Teruskan belajar', siriKhatam > 0 && sijilAktif()],
+  ];
+  const kiniLaluan = langkahLaluan.findIndex(([, ok]) => !ok);
+  const tindakanHtml = tindakan.length ? `<div class="an-kad" style="margin-bottom:22px"><div class="an-kepala"><h2>Perlu tindakan</h2></div><div class="row-list">${tindakan.join('')}</div></div>` : '';
+
+  akar.innerHTML = halamanApp('utama', `<div class="halaman">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="anGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2F6BFF"/><stop offset="1" stop-color="#7B5CFF"/></linearGradient></defs></svg>
+    <div class="an-atas">
+      <section class="an-hero">
+        <h1>${salam},<em>${h(nama)}!</em></h1>
+        <p>${kini ? 'Teruskan perjalanan belajar anda ke arah masa depan yang lebih cerah.' : 'Semua kuliah yang boleh ditonton sudah khatam. Hebat!'}</p>
+        ${kini ? `<button type="button" class="btn-hero" data-pergi="#/subject/${kini.id}"><i></i>Sambung belajar</button>` : `<button type="button" class="btn-hero" data-pergi="#/kuliah"><i></i>Lihat semua siri</button>`}
+        <div class="hero-seni" aria-hidden="true">${TOPI}<span class="glas g1"></span><span class="glas g2"></span><span class="glas g3"></span></div>
+      </section>
+      <div class="an-stat">
+        <div class="s"><span class="ik">${IKS.buku}</span><b class="tnum" data-kira="${siri.length}">0</b><span>Siri kuliah</span><a href="#/kuliah">Lihat semua &rarr;</a></div>
+        <div class="s"><span class="ik">${IKS.lencana}</span><b class="tnum" data-kira="${peratus}" data-akhiran="%">0%</b><span>Kemajuan keseluruhan</span><a href="#/kuliah">Lihat butiran &rarr;</a></div>
+        <div class="s"><span class="ik">${IKS.piala}</span><b class="tnum" data-kira="${siriKhatam}">0</b><span>Siri khatam</span><a href="${sijilAktif() ? '#/akaun' : '#/kuliah'}">${sijilAktif() ? 'Lihat sijil' : 'Lihat siri'} &rarr;</a></div>
       </div>
     </div>
-    <div class="dash-right">
-      <div class="focus-card">
-        <div class="focus-head"><div><h3>Sambung kuliah</h3><p>${kini ? 'Kuliah seterusnya dalam siri anda' : 'Semua kuliah yang boleh ditonton sudah khatam'}</p></div><button class="btn outline sm" data-pergi="#/kuliah">Kuliah saya</button></div>
+    ${tindakanHtml}
+    <div class="an-tengah">
+      <section class="an-kad">
+        <div class="an-kepala"><h2>Siri saya</h2><a href="#/kuliah">Lihat semua siri &rarr;</a></div>
+        ${susunan.length ? `<div class="an-kursus">${susunan.map(kadKursus).join('')}</div>` : '<p class="an-kosong">Kandungan akan datang.</p>'}
+      </section>
+      <section class="an-kad">
+        <div class="an-kepala"><h2>Kemajuan belajar</h2></div>
+        <div class="an-ring">
+          <div class="ring-svg"><svg viewBox="0 0 140 140" aria-hidden="true"><circle class="bg" cx="70" cy="70" r="52"/><circle class="fg" cx="70" cy="70" r="52" data-ofset="${(326.7 * (1 - peratus / 100)).toFixed(1)}"/></svg><b class="tnum" data-kira="${peratus}" data-akhiran="%">0%</b></div>
+          <div class="an-baris">
+            <div><i></i>Kuliah khatam<b class="tnum">${khatam} / ${semua.length}</b></div>
+            <div><i></i>Siri khatam<b class="tnum">${siriKhatam} / ${siri.length}</b></div>
+            <div><i class="biru"></i>Boleh ditonton<b class="tnum">${boleh.length}</b></div>
+            ${kunci ? `<div><i class="amber"></i>Perlu kod<b class="tnum">${kunci}</b></div>` : ''}
+          </div>
+        </div>
+        <div class="an-puji">${IKS.piala}<div><b>${peratus === 100 ? 'Tahniah!' : peratus >= 50 ? 'Bagus!' : 'Mulakan sekarang'}</b><small>${peratus === 100 ? 'Semua kuliah anda sudah khatam.' : 'Teruskan untuk capai sasaran anda.'}</small></div></div>
+      </section>
+    </div>
+    <div class="an-bawah">
+      <section class="an-kad">
+        <div class="an-kepala"><h2>Laluan belajar</h2><a href="#/kuliah">Lihat siri &rarr;</a></div>
+        <div class="an-laluan">${langkahLaluan.map(([l, ok], i) => `<div class="lp${ok ? ' siap' : i === kiniLaluan ? ' kini' : ''}"><span class="n">${ok ? '&#10003;' : i + 1}</span>${i + 1}. ${l}</div>`).join('')}</div>
+      </section>
+      <section class="an-kad">
+        <div class="an-kepala"><h2>Sambung kuliah</h2><button type="button" data-pergi="#/kuliah">Kuliah saya</button></div>
         ${kini ? `<div class="focus-now">
           <div class="focus-thumb"><div class="${ART(kini.ci)}"></div><div class="stage-veil"></div></div>
           <div class="meta"><small>${h(kini.course.tajuk)} · Kuliah ${dua(kini.si + 1)}</small><b>${h(kini.tajuk)}</b><div class="linebar"><i style="width:${pct(kini.course.subject.filter((s) => s.selesai).length, kini.course.subject.length)}%"></i></div></div>
-          <button class="btn primary" data-pergi="#/subject/${kini.id}">Sambung tonton</button>
+          <button class="btn primary sm" data-pergi="#/subject/${kini.id}">Tonton</button>
         </div>
-        <div class="focus-next">${seterusnya.slice(1, 4).map((s) => `<button class="next-item" data-pergi="#/subject/${s.id}"><small>Seterusnya · ${h(s.course.tajuk)}</small><b>${h(s.tajuk)}</b></button>`).join('')}</div>` : ''}
-      </div>
-      <div class="dash-cols">
-        <div class="panel-card"><div class="panel-title"><h3>Siri saya</h3><button class="btn sm ghost" data-pergi="#/kuliah">Semua siri</button></div><div class="muncul">${siri.map(barisSiri).join('') || '<p class="tiada-isi">Kandungan akan datang.</p>'}</div></div>
-        <div class="panel-card"><div class="panel-title"><h3>Perlu tindakan</h3></div><div class="row-list">${tindakan.join('')}</div></div>
-      </div>
+        <div class="an-jadual">${seterusnya.slice(1, 4).map((s) => `<button type="button" class="jd next-item" data-pergi="#/subject/${s.id}"><span class="ik">${IKS.main}</span><span class="t"><b>${h(s.tajuk)}</b><small>${h(s.course.tajuk)}</small></span><em>Kuliah ${dua(s.si + 1)}</em></button>`).join('')}</div>`
+        : '<p class="an-kosong">Semua kuliah yang boleh ditonton sudah khatam.</p>'}
+      </section>
     </div>
   </div>`);
+  animasiDash();
 }
 
 async function kuliahSaya() {
@@ -1069,6 +1174,7 @@ async function laluan() {
   if (arah) akar.querySelector('.halaman')?.classList.add(arah);
   window.scrollTo(0, 0);
   paparPasang();
+  pulihCari();
   window.KH_efek?.pasang(akar); // kesan masuk semasa skrol pada elemen halaman baharu
   window.KH_efek?.semakSkrol();
 }

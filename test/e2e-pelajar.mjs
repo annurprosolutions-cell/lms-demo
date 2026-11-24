@@ -137,7 +137,7 @@ try {
     await p.goto(`${B}/#/course/${asas.slug}`);
     await p.getByText('1 daripada 2 selesai').waitFor();
     await p.goto(B + '/#/');
-    await p.locator('.mycourse', { hasText: 'Asas Pengenalan' }).getByText('1 daripada 2 kuliah').waitFor();
+    await p.locator('.kc', { hasText: 'Asas Pengenalan' }).getByText('1 daripada 2 kuliah').waitFor();
     await p.locator('.focus-now').getByText('Adab menuntut ilmu').waitFor();
     await skrin(p, '13-pelajar-dashboard');
   });

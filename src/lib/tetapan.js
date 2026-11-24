@@ -28,7 +28,7 @@ export const MEDAN = {
   // Kod golongan: tebus kod kelas dan kotak Guna kod. Data dan kod sedia ada tidak dipadam.
   sijil_aktif: { maks: 5, lalai: 'tidak' },
   kod_aktif: { maks: 5, lalai: 'tidak' },
-  warna: { maks: 10, lalai: 'ungu' }, // warna tema lalai (hijau, biru, ungu, marun, arang)
+  warna: { maks: 10, lalai: 'biru' }, // warna tema lalai (hijau, biru, ungu, marun, arang)
 };
 export const LALAI = Object.fromEntries(Object.entries(MEDAN).map(([k, v]) => [k, v.lalai]));
 
