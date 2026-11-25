@@ -12,7 +12,7 @@ const tarikhPanjang = (iso) => {
 };
 
 const GAYA = `
-:root{--hijau:#0B6B4F;--emas:#B08D3C;--dakwat:#14211C;--kelabu:#5B6B64;--latar:#EEF3F0}
+:root{--hijau:#FF6A13;--emas:#B08D3C;--dakwat:#1F1A17;--kelabu:#6F645B;--latar:#FFF6EE}
 *{box-sizing:border-box}html,body{margin:0}
 body{font-family:Inter,system-ui,sans-serif;background:var(--latar);color:var(--dakwat);padding:16px}
 .sah{max-width:1000px;margin:0 auto 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:#fff;border:1px solid #D5E3DC;border-radius:14px;padding:12px 16px}
@@ -49,7 +49,7 @@ function halaman({ tajuk, badan, laman }) {
 <link rel="icon" href="/ikon/ikon-192.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lora:wght@600;700&display=swap">
-<style>${GAYA}:root{--hijau:${(WARNA[laman.warna] || WARNA.hijau).brand}}</style></head><body>${badan}</body></html>`;
+<style>${GAYA}:root{--hijau:${(WARNA[laman.warna] || WARNA.oren).brand}}</style></head><body>${badan}</body></html>`;
 }
 
 const respons = (html, status = 200) => new Response(html, { status, headers: { 'content-type': 'text/html; charset=utf-8', 'x-content-type-options': 'nosniff', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });

@@ -562,13 +562,13 @@ try {
   await langkah('tetapan: warna tema bertukar serta-merta; sandaran manual disenaraikan dan boleh dimuat turun; menu tiada ikon hilang', async () => {
     assert.ok(!(await page.locator('#menuPanel').textContent()).includes('undefined'));
     await page.goto(B + '/panel/#/tetapan');
-    await page.locator('.pilih-warna').getByText('Biru laut').click();
+    await page.locator('.pilih-warna').getByText('Hijau zamrud').click();
     await page.getByRole('button', { name: 'Simpan' }).click();
     await page.locator('#tetapan-ok').waitFor();
-    assert.equal(await page.evaluate(() => document.documentElement.dataset.warna), 'biru');
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.warna), 'hijau');
     const p2 = await bukaSesi(null);
     await p2.pg.goto(B + '/');
-    await p2.pg.waitForFunction(() => document.documentElement.dataset.warna === 'biru');
+    await p2.pg.waitForFunction(() => document.documentElement.dataset.warna === 'hijau');
     await p2.c.close();
     await page.getByRole('button', { name: 'Sandarkan sekarang' }).click();
     await page.getByText(/Sandaran .*-manual-\d{4}\.json dibuat/).waitFor();
@@ -578,7 +578,7 @@ try {
     const isi = await r.json();
     assert.ok(isi.jadual.pengguna.length >= 4 && !isi.jadual.sesi);
     await skrinHalaman(page, '16-sandaran');
-    await page.locator('.pilih-warna').getByText('Hijau zamrud').click();
+    await page.locator('.pilih-warna').getByText('Oren (lalai)').click();
     await page.getByRole('button', { name: 'Simpan' }).click();
     await page.waitForFunction(() => !document.documentElement.dataset.warna);
   });

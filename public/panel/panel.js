@@ -758,7 +758,7 @@ async function borangTetapan() {
         ${jenis === 'pilih'
           ? `<select id="${k}" name="${k}"><option value="ya" ${t.nilai[k] !== 'tidak' ? 'selected' : ''}>Papar</option><option value="tidak" ${t.nilai[k] === 'tidak' ? 'selected' : ''}>Sembunyi</option></select>`
           : jenis === 'warna'
-          ? `<div class="pilih-warna" role="radiogroup" aria-label="Warna tema">${Object.entries(BRAND_WARNA).map(([w, kod]) => `<label><input type="radio" name="warna" value="${w}" ${(t.nilai.warna || 'hijau') === w ? 'checked' : ''}><i style="background:${kod}"></i>${{ hijau: 'Hijau zamrud', biru: 'Biru laut', ungu: 'Ungu', marun: 'Marun', arang: 'Arang' }[w]}</label>`).join('')}</div>`
+          ? `<div class="pilih-warna" role="radiogroup" aria-label="Warna tema">${Object.entries(BRAND_WARNA).map(([w, kod]) => `<label><input type="radio" name="warna" value="${w}" ${(t.nilai.warna || 'oren') === w ? 'checked' : ''}><i style="background:${kod}"></i>${{ oren: 'Oren (lalai)', hijau: 'Hijau zamrud', ungu: 'Ungu', marun: 'Marun', arang: 'Arang' }[w]}</label>`).join('')}</div>`
           : jenis === 'nombor'
           ? `<input type="number" id="${k}" name="${k}" min="1" max="365" placeholder="${h(t.lalai[k])}" value="${t.nilai[k] === t.lalai[k] ? '' : h(t.nilai[k])}">`
           : jenis === 'textarea'
@@ -792,7 +792,7 @@ async function paparSandaran(mesej) {
 function paparLogo(logo, ralat) {
   document.getElementById('kad-logo').innerHTML = `<h2>Logo</h2>
     <div class="ralat" ${ralat ? '' : 'hidden'}>${h(ralat || '')}</div>
-    ${logo ? `<div class="baris" style="margin-bottom:12px"><img src="${h(logo)}" alt="Logo semasa" style="width:64px;height:64px;object-fit:contain;border:1px solid var(--line);border-radius:12px;padding:6px;background:#fff">
+    ${logo ? `<div class="baris" style="margin-bottom:12px"><img src="${h(logo)}" alt="Logo semasa" style="width:64px;height:64px;object-fit:contain;border:1px solid var(--line);border-radius:12px;padding:6px;background:#ffffff">
       <button type="button" class="bahaya" data-act="buang-logo">Buang logo</button></div>` : '<p class="kecil">Belum ada logo. Ikon lalai digunakan.</p>'}
     <label for="failLogo">Muat naik logo (PNG, JPG atau WEBP, maksimum 500 KB)</label>
     <input type="file" id="failLogo" accept="image/png,image/jpeg,image/webp" data-logo-fail>
@@ -1159,10 +1159,10 @@ async function logMasukGoogle(res) {
 
 let dengarLaluan = false;
 
-const BRAND_WARNA = { hijau: '#0B6B4F', biru: '#1D4ED8', ungu: '#6D28D9', marun: '#8B1E3F', arang: '#1F2937' };
+const BRAND_WARNA = { oren: '#FF6A13', hijau: '#0B6B4F', ungu: '#6D28D9', marun: '#8B1E3F', arang: '#1F2937' };
 function pasangWarna(w) {
-  const warna = BRAND_WARNA[w] ? w : 'hijau';
-  if (warna === 'hijau') document.documentElement.removeAttribute('data-warna'); else document.documentElement.setAttribute('data-warna', warna);
+  const warna = BRAND_WARNA[w] ? w : 'oren';
+  if (warna === 'oren') document.documentElement.removeAttribute('data-warna'); else document.documentElement.setAttribute('data-warna', warna);
   document.querySelector('meta[name=theme-color]')?.setAttribute('content', BRAND_WARNA[warna]);
   try { localStorage.setItem('kh-warna', warna); } catch { /* storan disekat */ }
 }

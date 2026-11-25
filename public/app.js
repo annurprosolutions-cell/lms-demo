@@ -210,7 +210,7 @@ function topbar(aktif) {
   </div>`;
 }
 
-const TOPI = '<svg class="topi" viewBox="0 0 64 64" fill="none" aria-hidden="true"><defs><linearGradient id="anT" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FE9FF"/><stop offset="1" stop-color="#5B7CFF"/></linearGradient></defs><path d="M32 8 3 22l29 14 29-14z" fill="url(#anT)"/><path d="M14 30v14c0 5 8 10 18 10s18-5 18-10V30L32 40z" fill="url(#anT)" opacity=".85"/><path d="M58 24v18" stroke="#BFEFFF" stroke-width="3" stroke-linecap="round"/></svg>';
+const TOPI = '<svg class="topi" viewBox="0 0 64 64" fill="none" aria-hidden="true"><defs><linearGradient id="anT" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF977F"/><stop offset="1" stop-color="#FF9E5B"/></linearGradient></defs><path d="M32 8 3 22l29 14 29-14z" fill="url(#anT)"/><path d="M14 30v14c0 5 8 10 18 10s18-5 18-10V30L32 40z" fill="url(#anT)" opacity=".85"/><path d="M58 24v18" stroke="#FFCDBF" stroke-width="3" stroke-linecap="round"/></svg>';
 const IKN = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const SB_NAV = [
   ['utama', 'Dashboard', '#/', IKN('<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>')],
@@ -508,7 +508,7 @@ async function lamanAwam() {
         <div><h2>Mula belajar hari ini</h2><p>Log masuk mengambil masa beberapa saat dengan akaun Google. Percuma, tiada bayaran.</p></div>
         <div style="display:flex;gap:12px;flex-wrap:wrap">
           <a class="btn primary lg" href="#/masuk">Daftar percuma</a>
-          <a class="btn outline lg" style="background:transparent;border-color:rgba(255,255,255,.3);color:#fff" href="#/masuk">Log masuk</a>
+          <a class="btn outline lg" style="background:transparent;border-color:rgba(255,255,255,.3);color:#ffffff" href="#/masuk">Log masuk</a>
         </div>
       </div>
     </div>
@@ -518,7 +518,7 @@ async function lamanAwam() {
     <div class="wrap">
       <div class="foot-grid">
         <div class="foot-about">
-          <div class="brand">${tanda()}<span><span class="brand-name" style="color:#fff">${h(konfig.laman.nama)}</span>${konfig.laman.tagline ? `<span class="brand-sub">${h(konfig.laman.tagline)}</span>` : ''}</span></div>
+          <div class="brand">${tanda()}<span><span class="brand-name" style="color:#ffffff">${h(konfig.laman.nama)}</span>${konfig.laman.tagline ? `<span class="brand-sub">${h(konfig.laman.tagline)}</span>` : ''}</span></div>
           <p>${h(konfig.laman.footer_teks)}</p>
           ${konfig.laman.emel_hubungan ? `<p>Hubungi: <a href="mailto:${h(konfig.laman.emel_hubungan)}">${h(konfig.laman.emel_hubungan)}</a></p>` : ''}
         </div>
@@ -575,7 +575,7 @@ function halamanMasuk() {
     const kotak = document.getElementById('google');
     if (!kotak) return;
     google.accounts.id.initialize({ client_id: konfig.googleClientId, callback: logMasuk });
-    google.accounts.id.renderButton(kotak, { theme: 'filled_black', size: 'large', text: 'continue_with', width: Math.min(360, kotak.clientWidth || 320) });
+    google.accounts.id.renderButton(kotak, { theme: 'outline', size: 'large', text: 'continue_with', width: Math.min(360, kotak.clientWidth || 320) });
   };
   document.head.appendChild(sk);
 }
@@ -664,7 +664,7 @@ async function dashboard() {
   const tindakanHtml = tindakan.length ? `<div class="an-kad" style="margin-bottom:22px"><div class="an-kepala"><h2>Perlu tindakan</h2></div><div class="row-list">${tindakan.join('')}</div></div>` : '';
 
   akar.innerHTML = halamanApp('utama', `<div class="halaman">
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="anGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2F6BFF"/><stop offset="1" stop-color="#7B5CFF"/></linearGradient></defs></svg>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="anGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF7E2F"/><stop offset="1" stop-color="#FFB55C"/></linearGradient></defs></svg>
     <div class="an-atas">
       <section class="an-hero">
         <h1>${salam},<em>${h(nama)}!</em></h1>
@@ -1180,10 +1180,10 @@ async function laluan() {
 }
 
 // Warna tema daripada Tetapan laman; disimpan supaya muatan seterusnya terus berwarna betul.
-const BRAND_WARNA = { hijau: '#0B6B4F', biru: '#1D4ED8', ungu: '#6D28D9', marun: '#8B1E3F', arang: '#1F2937' };
+const BRAND_WARNA = { oren: '#FF6A13', hijau: '#0B6B4F', ungu: '#6D28D9', marun: '#8B1E3F', arang: '#1F2937' };
 function pasangWarna(w) {
-  const warna = BRAND_WARNA[w] ? w : 'hijau';
-  if (warna === 'hijau') document.documentElement.removeAttribute('data-warna'); else document.documentElement.setAttribute('data-warna', warna);
+  const warna = BRAND_WARNA[w] ? w : 'oren';
+  if (warna === 'oren') document.documentElement.removeAttribute('data-warna'); else document.documentElement.setAttribute('data-warna', warna);
   document.querySelector('meta[name=theme-color]')?.setAttribute('content', BRAND_WARNA[warna]);
   try { localStorage.setItem('kh-warna', warna); } catch { /* storan disekat */ }
 }

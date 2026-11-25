@@ -2,8 +2,8 @@
 
 // Pilihan warna tema. Nilai CSS penuh dalam public/gaya.css (:root[data-warna=...]); `brand` untuk theme-color dan sijil.
 export const WARNA = {
-  hijau: { nama: 'Hijau zamrud (asal)', brand: '#0B6B4F' },
-  biru: { nama: 'Biru laut', brand: '#1D4ED8' },
+  oren: { nama: 'Oren (lalai)', brand: '#FF6A13' },
+  hijau: { nama: 'Hijau zamrud', brand: '#0B6B4F' },
   ungu: { nama: 'Ungu', brand: '#6D28D9' },
   marun: { nama: 'Marun', brand: '#8B1E3F' },
   arang: { nama: 'Arang', brand: '#1F2937' },
@@ -28,7 +28,7 @@ export const MEDAN = {
   // Kod golongan: tebus kod kelas dan kotak Guna kod. Data dan kod sedia ada tidak dipadam.
   sijil_aktif: { maks: 5, lalai: 'tidak' },
   kod_aktif: { maks: 5, lalai: 'tidak' },
-  warna: { maks: 10, lalai: 'biru' }, // warna tema lalai (hijau, biru, ungu, marun, arang)
+  warna: { maks: 10, lalai: 'oren' }, // warna tema lalai (oren, hijau, ungu, marun, arang)
 };
 export const LALAI = Object.fromEntries(Object.entries(MEDAN).map(([k, v]) => [k, v.lalai]));
 
@@ -67,6 +67,7 @@ export function sahkanTetapan(b) {
 export function gabungTetapan(baris) {
   const peta = new Map((baris || []).map((r) => [r.kunci, r.nilai]));
   const nilai = Object.fromEntries(Object.entries(LALAI).map(([k, l]) => [k, peta.get(k) || l]));
+  if (!WARNA[nilai.warna]) nilai.warna = LALAI.warna; // contoh tema biru lama (dibuang) kembali kepada oren
   const logoKunci = peta.get('logo_kunci') || null;
   return { nilai, logoKunci, logoJenis: peta.get('logo_jenis') || null };
 }
